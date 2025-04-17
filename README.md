@@ -32,7 +32,7 @@ The server will start and listen on the configured port (default: `3000`).
 ## Scripts
 
 - **`npm start`**: Starts the application in production mode.
-- **`npm run dev`**: Starts the application in development mode with live reloading (requires `nodemon`).
+- **`npm run dev`**: Starts the application in development mode with live reloading (requires `nodemon` and setting the variable devMode as true).
 
 
 ## Features
