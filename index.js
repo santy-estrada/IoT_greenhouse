@@ -1,6 +1,7 @@
 const mqtt = require('mqtt');
 const express = require('express');
 const bodyparser = require('body-parser');
+require('dotenv').config();
 
 const webserver = express();
 //webserver.use(bodyparser.json);
@@ -217,22 +218,23 @@ function getPlantData({ limit = 50, startDate, endDate, plantId } = {}, callback
 }
 
 // Example get query
-getPlantData(
-  { limit: 10, startDate: '2025-04-17 6:10:00', endDate: '2025-04-17 6:40:00', plantId: 1 },
-  (err, results) => {
-    if (err) {
-      console.error("Failed to fetch data:", err.message);
-    } else {
-      console.log("Fetched data:", results);
-    }
-  }
-);
+// getPlantData(
+//   { limit: 10, startDate: '2025-04-17 6:10:00', endDate: '2025-04-17 6:40:00', plantId: 1 },
+//   (err, results) => {
+//     if (err) {
+//       console.error("Failed to fetch data:", err.message);
+//     } else {
+//       console.log("Fetched data:", results);
+//     }
+//   }
+// );
 
-const devMode = false;
+const devMode = process.env.DEVMODE === 'true';
 
 if (devMode) {
-  console.log("Dev mode enabled. Press any key to exit.");
+  console.log("Dev mode enabled. Press ctl+c to exit.");
 } else {
+  console.log("Dev mode disabled. Press ctl+c to exit.");
   let readline = require('readline');
   const exp = require('constants');
 
