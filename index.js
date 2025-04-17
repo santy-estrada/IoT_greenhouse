@@ -228,18 +228,31 @@ getPlantData(
   }
 );
 
+const devMode = false;
 
+if (devMode) {
+  console.log("Dev mode enabled. Press any key to exit.");
+} else {
+  let readline = require('readline');
+  const exp = require('constants');
 
-let readline = require('readline');
-const exp = require('constants');
+  readline.emitKeypressEvents(process.stdin);
 
-readline.emitKeypressEvents(process.stdin);
+  process.stdin.on('keypress', (ch, key) => {
+    console.log('got "keypress"', ch, key);
+    if (key && key.ctrl && key.name == 'c') {
+      process.exit(0);
+    }
+  });
 
-process.stdin.on('keypress', (ch, key) => {
-  console.log('got "keypress"', ch, key);
-  if (key && key.ctrl && key.name == 'c') {
-    process.exit(0);
+  try {
+    if (process.stdin.isTTY && typeof process.stdin.setRawMode === 'function') {
+      process.stdin.setRawMode(true);
+    }
+  } catch (err) {
+    console.warn('⚠️ Could not set raw mode:', err.message);
   }
-});
+}
 
-process.stdin.setRawMode(true);
+
+

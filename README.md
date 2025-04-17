@@ -34,23 +34,12 @@ The server will start and listen on the configured port (default: `3000`).
 - **`npm start`**: Starts the application in production mode.
 - **`npm run dev`**: Starts the application in development mode with live reloading (requires `nodemon`).
 
-## Configuration
-
-- Environment variables can be configured in a `.env` file. Example:
-  ```
-  PORT=3000
-  DATABASE_URL=mongodb://localhost:27017/greenhouse
-  ```
 
 ## Features
 
 - RESTful API for greenhouse management
 - Integration with IoT devices
-- Database support (e.g., MongoDB)
-
-## Contributing
-
-Contributions are welcome! Please fork the repository and submit a pull request.
+- Database support (MySQL with MAMP)
 
 ## License
 
@@ -58,4 +47,4 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## Contact
 
-For any inquiries, please contact [your-email@example.com].
+For any inquiries, please contact [santiago.estrada6@eia.edu.co].
