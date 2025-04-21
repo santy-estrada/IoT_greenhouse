@@ -72,16 +72,15 @@ const client = mqtt.connect(connectUrl, {
 
 
 const test = false;
-const topic = test ? 'dataBaseTest' : 'realDeal';
-const topics = ["dataBaseTest", "realDeal"];
+const topics = [`${process.env.MQTT_TEST_TOPIC}`, `${process.env.MQTT_REAL_TOPIC}`];
 
 client.on('connect', () => {
   console.log(db ? 'Connected': "No connection to DB");
 
-  client.subscribe(['santy/'], () => {
-    console.log(`Subscribe to topic {'santy/'}'`);
+  client.subscribe([`${process.env.MQTT_MESSAGE_TOPIC}`], () => {
+    console.log(`Subscribe to topic {'${process.env.MQTT_MESSAGE_TOPIC}'}'`);
     const message = 'nodejs mqtt test';
-    client.publish("santy/", message, { qos: 0, retain: false }, (error) => {
+    client.publish(`${process.env.MQTT_MESSAGE_TOPIC}`, message, { qos: 0, retain: false }, (error) => {
       if (error) {
         console.error(error);
       }
@@ -104,7 +103,7 @@ function formatDateForMySQL(date) {
 client.on('message', (topic, payload) => {
   console.log('Received Message:', topic, payload.toString());
 
-  if (topic === "dataBaseTest") {
+  if (topic === `${process.env.MQTT_TEST_TOPIC}`) {
     try {
       const data = JSON.parse(payload.toString());
       const { luminosity, humidity, temperature, plant_id, entryCreation_time } = data;
@@ -126,7 +125,7 @@ client.on('message', (topic, payload) => {
           console.error("Error inserting into database:", err.message || "No connection to DB");
           return;
         }
-        console.log("✅ 1 record inserted successfully via DatabaseTest.");
+        console.log(`✅ 1 record inserted successfully via ${process.env.MQTT_TEST_TOPIC}.`);
       });
       
     } catch (err) {
@@ -135,7 +134,7 @@ client.on('message', (topic, payload) => {
     }
   }
 
-  if (topic === "realDeal") {
+  if (topic === `${process.env.MQTT_REAL_TOPIC}`) {
     try {
       const data = JSON.parse(payload.toString());
       const { luminosity, humidity, temperature, plant_id, entryCreation_time } = data;
@@ -157,7 +156,7 @@ client.on('message', (topic, payload) => {
           console.error("Error inserting into database:", err.message || "No connection to DB");
           return;
         }
-        console.log("✅ 1 record inserted successfully via realDeal.");
+        console.log(`✅ 1 record inserted successfully via ${process.env.MQTT_REAL_TOPIC}.`);
       });
       
     } catch (err) {
