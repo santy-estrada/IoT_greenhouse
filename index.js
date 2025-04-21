@@ -40,10 +40,12 @@ var sqlcon = mysql.createConnection({
   database: process.env.DB_NAME
 });
 
+const table = process.env.TABLE_NAME;
 
 sqlcon.connect(function(err) {
   if (err) {
-    console.log("Unable to connect to SQL:", err.message);
+    console.log("Unable to connect to SQL:", err.message || "No connection to DB");
+    db = false;
     return;
   }
   console.log("Connected! SQL");
@@ -74,7 +76,7 @@ const topic = test ? 'dataBaseTest' : 'realDeal';
 const topics = ["dataBaseTest", "realDeal"];
 
 client.on('connect', () => {
-  console.log('Connected');
+  console.log(db ? 'Connected': "No connection to DB");
 
   client.subscribe(['santy/'], () => {
     console.log(`Subscribe to topic {'santy/'}'`);
@@ -114,21 +116,21 @@ client.on('message', (topic, payload) => {
       console.log("Entry time:", entryTime);
       
       const sql = `
-        INSERT INTO plantdata_v1 
+        INSERT INTO ${table}
         (entryCreation_time, luminosity, humidity, temperature, plant_id) 
         VALUES (?, ?, ?, ?, ?)
       `;
 
       sqlcon.query(sql, [entryTime, luminosity, humidity, temperature, plant_id], (err, result) => {
         if (err) {
-          console.error("Error inserting into database:", err.message);
+          console.error("Error inserting into database:", err.message || "No connection to DB");
           return;
         }
         console.log("✅ 1 record inserted successfully via DatabaseTest.");
       });
       
     } catch (err) {
-      console.error("❌ Failed to parse MQTT payload:", err.message);
+      console.error("❌ Failed to parse MQTT payload:", err.message || "No connection to DB");
       console.log("❌ Payload:", payload.toString());
     }
   }
@@ -145,21 +147,21 @@ client.on('message', (topic, payload) => {
       console.log("Entry time:", entryTime);
       
       const sql = `
-        INSERT INTO plantdata_v1 
+        INSERT INTO ${table} 
         (entryCreation_time, luminosity, humidity, temperature, plant_id) 
         VALUES (?, ?, ?, ?, ?)
       `;
 
       sqlcon.query(sql, [entryTime, luminosity, humidity, temperature, plant_id], (err, result) => {
         if (err) {
-          console.error("Error inserting into database:", err.message);
+          console.error("Error inserting into database:", err.message || "No connection to DB");
           return;
         }
         console.log("✅ 1 record inserted successfully via realDeal.");
       });
       
     } catch (err) {
-      console.error("❌ Failed to parse MQTT payload:", err.message);
+      console.error("❌ Failed to parse MQTT payload:", err.message || "No connection to DB");
       console.log("❌ Payload:", payload.toString());
     }
   }
@@ -183,7 +185,7 @@ function getPlantData({ limit = 50, startDate, endDate, plantId } = {}, callback
   }
   
   let sql = `
-    SELECT * FROM plantdata_v1
+    SELECT * FROM ${table}
     WHERE 1=1
   `;
 
@@ -211,7 +213,7 @@ function getPlantData({ limit = 50, startDate, endDate, plantId } = {}, callback
   // Execute the query
   sqlcon.query(sql, params, (err, results) => {
     if (err) {
-      console.error("Error querying the database:", err.message);
+      console.error("Error querying the database:", err.message || "No connection to DB");
       callback(err, null);
       return;
     }
@@ -220,16 +222,16 @@ function getPlantData({ limit = 50, startDate, endDate, plantId } = {}, callback
 }
 
 // Example get query
-getPlantData(
-  { limit: 10, startDate: '2025-04-17 6:10:00', endDate: '2025-04-17 6:40:00', plantId: 1 },
-  (err, results) => {
-    if (err) {
-      console.error("Failed to fetch data:", err.message);
-    } else {
-      console.log("Fetched data:", results);
-    }
-  }
-);
+// getPlantData(
+//   { limit: 10, startDate: '2025-04-17 6:10:00', endDate: '2025-04-17 6:40:00', plantId: 1 },
+//   (err, results) => {
+//     if (err) {
+//       console.error("Failed to fetch data:", err.message || "No connection to DB");
+//     } else {
+//       console.log("Fetched data:", results);
+//     }
+//   }
+// );
 
 const devMode = process.env.DEVMODE === 'true';
 
