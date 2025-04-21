@@ -71,7 +71,6 @@ const client = mqtt.connect(connectUrl, {
 });
 
 
-const test = false;
 const topics = [`${process.env.MQTT_TEST_TOPIC}`, `${process.env.MQTT_REAL_TOPIC}`];
 
 client.on('connect', () => {
