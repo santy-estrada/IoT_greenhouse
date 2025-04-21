@@ -34,11 +34,12 @@ var mysql = require('mysql');
 var db = false;
 
 var sqlcon = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "root",
-  database: "greenhouse_v1"
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME
 });
+
 
 sqlcon.connect(function(err) {
   if (err) {
@@ -52,8 +53,8 @@ sqlcon.connect(function(err) {
 
 ///mqtt
 
-const host = 'localhost';
-const port = '1883';
+const host = process.env.MQTT_HOST;
+const port = process.env.MQTT_PORT;
 const clientId = `mqtt_${Math.random().toString(16).slice(3)}`;
 
 const connectUrl = `mqtt://${host}:${port}`;
@@ -62,10 +63,11 @@ const client = mqtt.connect(connectUrl, {
   clientId,
   clean: true,
   connectTimeout: 4000,
-  username: 'emqx',
-  password: 'public',
+  username: process.env.MQTT_USER,
+  password: process.env.MQTT_PASS,
   reconnectPeriod: 1000,
 });
+
 
 const test = false;
 const topic = test ? 'dataBaseTest' : 'realDeal';
@@ -218,16 +220,16 @@ function getPlantData({ limit = 50, startDate, endDate, plantId } = {}, callback
 }
 
 // Example get query
-// getPlantData(
-//   { limit: 10, startDate: '2025-04-17 6:10:00', endDate: '2025-04-17 6:40:00', plantId: 1 },
-//   (err, results) => {
-//     if (err) {
-//       console.error("Failed to fetch data:", err.message);
-//     } else {
-//       console.log("Fetched data:", results);
-//     }
-//   }
-// );
+getPlantData(
+  { limit: 10, startDate: '2025-04-17 6:10:00', endDate: '2025-04-17 6:40:00', plantId: 1 },
+  (err, results) => {
+    if (err) {
+      console.error("Failed to fetch data:", err.message);
+    } else {
+      console.log("Fetched data:", results);
+    }
+  }
+);
 
 const devMode = process.env.DEVMODE === 'true';
 
