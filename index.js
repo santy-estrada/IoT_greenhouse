@@ -2,6 +2,8 @@ const mqtt = require('mqtt');
 const express = require('express');
 const bodyparser = require('body-parser');
 require('dotenv').config();
+console.log("MySQL connection");
+
 
 const webserver = express();
 //webserver.use(bodyparser.json);

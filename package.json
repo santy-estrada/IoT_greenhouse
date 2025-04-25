@@ -5,10 +5,14 @@
     "express": "^4.21.1",
     "mqtt": "^5.10.1",
     "mysql": "^2.18.1",
-    "nodemon": "^3.1.9"
+    "nodemon": "^3.1.9",
+    "pg": "^8.15.5"
   },
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "devSup": "nodemon indexSupabase.js",
+    "startSup": "node indexSupabase.js"
+
   }
 }
