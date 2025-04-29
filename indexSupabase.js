@@ -211,6 +211,158 @@ function getPlantData({ limit = 50, startDate, endDate, startTime = '00:00:00', 
     });
 }
 
+// Endpoint to update valve state
+webserver.post('/update/valve', async (req, res) => {
+  const command_type = "valve";
+  const { plant_id, valve_state } = req.body;
+  if (typeof plant_id !== 'number' || typeof valve_state !== 'boolean') {
+    return res.status(400).send('Invalid input. plant_id (number) and valve_state (boolean) required.');
+  }
+
+  try {
+    await pool.query(
+      
+      `UPDATE  ${table}
+      SET valve_state = $1, last_updated = NOW()
+      WHERE plant_id = $2
+      AND entrystored_time = (
+      SELECT MAX(entrystored_time)
+      FROM ${table}
+      WHERE plant_id = $2);`,
+      [valve_state, plant_id]
+    );
+    console.log(`✅ Valve state updated for plant ${plant_id}: ${valve_state}`);
+    // Now publish MQTT message to STM32
+    const message = JSON.stringify({ command_type, plant_id, valve_state });
+    client.publish(`${process.env.MQTT_COMMAND_TOPIC}`, message, {}, (error) => {
+      if (error) {
+        console.error('❌ Failed to publish MQTT command:', error.message);
+      } else {
+        console.log('✅ Command published to STM32 successfully.');
+      }
+    });
+        res.send('Valve state updated and command sent.');
+  } catch (err) {
+    console.error('❌ Error updating valve state:', err.message);
+    res.status(500).send('Error updating valve state.');
+  }
+});
+
+// Endpoint to update pump state
+webserver.post('/update/pump', async (req, res) => {
+  const command_type = "pump";
+  const { pump_state } = req.body;
+  if (typeof pump_state !== 'boolean') {
+    return res.status(400).send('Invalid input. pump_state (boolean) required.');
+  }
+
+  try {
+    await pool.query(
+      `UPDATE  ${table}
+      SET pump_state = $1, last_updated = NOW()
+      WHERE entrystored_time = (
+      SELECT MAX(entrystored_time)
+      FROM ${table});`,
+      [pump_state]
+    );
+    console.log(`✅ Pump state updated: ${pump_state}`);
+    // Publish MQTT message
+    const message = JSON.stringify({ command_type, pump_state });
+    client.publish(`${process.env.MQTT_COMMAND_TOPIC}`, message, {}, (error) => {
+      if (error) {
+        console.error('❌ Failed to publish MQTT command:', error.message);
+      } else {
+        console.log('✅ Command published to STM32 successfully.');
+      }
+    });
+        res.send('Pump state updated and command sent.');
+  } catch (err) {
+    console.error('❌ Error updating pump state:', err.message);
+    res.status(500).send('Error updating pump state.');
+  }
+});
+
+// Endpoint to update LED intensity
+webserver.post('/update/led', async (req, res) => {
+  const command_type = "led";
+  const { plant_id, led_intensity } = req.body;
+  if (typeof plant_id !== 'number' || typeof led_intensity !== 'number' || led_intensity < 0 || led_intensity > 100) {
+    return res.status(400).send('Invalid input. plant_id (number) and led_intensity (number between 0-100) required.');
+  }
+
+  try {
+    await pool.query(
+      `UPDATE  ${table}
+      SET led_intensity = $1, last_updated = NOW()
+      WHERE plant_id = $2
+      AND entrystored_time = (
+      SELECT MAX(entrystored_time)
+      FROM ${table}
+      WHERE plant_id = $2);`,
+      [led_intensity, plant_id]
+    );
+    console.log(`✅ LED intensity updated for plant ${plant_id}: ${led_intensity}`);
+    // Publish MQTT message
+    const message = JSON.stringify({ command_type, plant_id, led_intensity });
+    client.publish(`${process.env.MQTT_COMMAND_TOPIC}`, message, {}, (error) => {
+      if (error) {
+        console.error('❌ Failed to publish MQTT command:', error.message);
+      } else {
+        console.log('✅ Command published to STM32 successfully.');
+      }
+    });
+        res.send('LED intensity updated and command sent.');
+  } catch (err) {
+    console.error('❌ Error updating LED intensity:', err.message);
+    res.status(500).send('Error updating LED intensity.');
+  }
+});
+
+
+// Poll and send current actuator states every second
+setInterval(async () => {
+  try {
+    const result = await pool.query(`
+      SELECT DISTINCT ON (plant_id) plant_id, valve_state, led_intensity
+      FROM ${table}
+      ORDER BY plant_id, last_updated DESC;
+    `);
+
+    // Query the latest pump state separately
+    const pumpResult = await pool.query(`
+      SELECT pump_state
+      FROM ${table}
+      ORDER BY last_updated DESC
+      LIMIT 1
+    `);
+
+    const pump_state = pumpResult.rows[0]?.pump_state;
+
+    result.rows.forEach(row => {
+      const { plant_id, valve_state, led_intensity } = row;
+
+      // Publish valve state
+      const valveMsg = JSON.stringify({ command_type: "valve", plant_id, valve_state });
+      client.publish(`${process.env.MQTT_COMMAND_TOPIC}`, valveMsg);
+
+      // Publish LED intensity
+      const ledMsg = JSON.stringify({ command_type: "led", plant_id, led_intensity });
+      client.publish(`${process.env.MQTT_COMMAND_TOPIC}`, ledMsg);
+    });
+
+    // Publish pump state globally
+    if (typeof pump_state !== 'undefined') {
+      const pumpMsg = JSON.stringify({ command_type: "pump", pump_state });
+      client.publish(`${process.env.MQTT_COMMAND_TOPIC}`, pumpMsg);
+    }
+
+    console.log('✅ Actuator states synchronized for all plants.');
+  } catch (error) {
+    console.error('❌ Error synchronizing actuator states:', error.message);
+  }
+}, 5000); // every 5 seconds
+
+
 
 
 const devMode = process.env.DEVMODE === 'true';
