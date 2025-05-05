@@ -1,0 +1,14 @@
+-- AlterTable
+ALTER TABLE "IotDevEvent" ALTER COLUMN "last_updated" SET DEFAULT CURRENT_TIMESTAMP;
+
+-- AlterTable
+ALTER TABLE "IotDevState" ALTER COLUMN "last_updated" SET DEFAULT CURRENT_TIMESTAMP;
+
+-- AlterTable
+ALTER TABLE "Log" ALTER COLUMN "entry_store_time" SET DEFAULT CURRENT_TIMESTAMP;
+
+-- AlterTable
+ALTER TABLE "PlantEvent" ALTER COLUMN "last_updated" SET DEFAULT CURRENT_TIMESTAMP;
+
+-- AlterTable
+ALTER TABLE "PlantState" ALTER COLUMN "last_updated" SET DEFAULT CURRENT_TIMESTAMP;

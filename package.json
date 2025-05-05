@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@prisma/client": "^6.7.0",
     "body-parser": "^1.20.3",
     "dotenv": "^16.5.0",
     "express": "^4.21.1",
@@ -13,6 +14,8 @@
     "dev": "nodemon index.js",
     "devSup": "nodemon indexSupabase.js",
     "startSup": "node indexSupabase.js"
-
+  },
+  "devDependencies": {
+    "prisma": "^6.7.0"
   }
 }
