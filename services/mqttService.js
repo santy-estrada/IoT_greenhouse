@@ -5,6 +5,9 @@ const { createMqttClient } = require('../utils/mqttClient');
 const { setupPeriodicSync } = require('./syncService');
 const { monitorEventChanges } = require('./eventChangeService');
 const { PrismaClient } = require('@prisma/client');
+const { plantErrorService } = require('./plantErrorService');
+const { iotDevOnlineService } = require('./iotDevOnlineService');
+
 const prisma = new PrismaClient();
 
 function setupMqttClient() {
@@ -17,7 +20,7 @@ function setupMqttClient() {
       console.log('Message topic:', topic);
       console.log('Message payload:', payload.toString());
       return;
-    } else if ([process.env.MQTT_TEST_TOPIC, process.env.MQTT_REAL_TOPIC].includes(topic)) {
+    } else if ([process.env.MQTT_TEST_TOPIC].includes(topic)) {
       try {
         const data = JSON.parse(payload.toString());
 
@@ -49,6 +52,23 @@ function setupMqttClient() {
         }
       } catch (err) {
         console.error('❌ Failed to process MQTT message:', err.message);
+        console.log('❌ Payload:', payload.toString());
+      }
+    }else if (topic === process.env.MQTT_REAL_TOPIC) {
+      try {
+        const data = JSON.parse(payload.toString());
+    
+        // If plant_id is provided, update the error column
+        if (data.plant_id) {
+          await plantErrorService(data.plant_id, data);
+        }
+    
+        // If iot_dev_id is provided, update the online_status column
+        if (data.iot_dev_id) {
+          await iotDevOnlineService(data.iot_dev_id, data);
+        }
+      } catch (err) {
+        console.error('❌ Failed to process MQTT_REAL_TOPIC message:', err.message);
         console.log('❌ Payload:', payload.toString());
       }
     }

@@ -103,23 +103,44 @@ You can test your system by publishing a message to the appropriate MQTT topic. 
 
 ---
 
-### 🧾 Payload Format
+### 🧾 Payload Format For Log (This is sent by the STM32)
 
 ```json
 {
-  "entryCreation_time": "2025-04-22 07:40:00",
-  "humidity": 82,
-  "temperature": 5.6954,
-  "luminosity": 2.25,
-  "plant_id": 1
+  "luminosity_state": 75.5,
+  "humidity_state": 60.2,
+  "temperature": 22.5,
+  "plant_id": 1,
+  "entryCreation_time": "2025-05-04T15:30:00Z",
+  "valve_state": true,
+  "pump_state": true,
+  "led_intensity_state": 80
 }
 ```
 
-- `entryCreation_time` (optional): If omitted, the current server time will be used.
+- `entryCreation_time` (mandatory).
 - `humidity`, `temperature`, `luminosity`: Float or integer values depending on your sensor precision.
 - `plant_id`: Integer ID used to identify the plant/sensor source.
 
 ---
+
+### 🧾 Payload Format to Update Error/Online_status (This is sent by the STM32)
+
+#### Option 1: Update IoT_dev_online_status
+```json
+{
+  "iot_dev_id": 1,
+  "online_status": true
+}
+```
+
+#### Option 2: Update error from Plant table
+```json
+{
+  "plant_id": 1,
+  "error": false
+}
+```
 
 ### 🚀 Example CLI Command (Using Mosquitto)
 
