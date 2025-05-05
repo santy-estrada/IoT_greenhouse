@@ -1,6 +1,5 @@
 const { setupMqttClient } = require('./services/mqttService');
 const mqtt = require('mqtt');
-const { PrismaClient } = require('@prisma/client');
 require('dotenv').config();
 
 console.log("Starting application...");
