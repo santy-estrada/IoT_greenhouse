@@ -3,6 +3,7 @@ const { updatePlantState } = require('./plantStateService');
 const { updateIotDevState } = require('./iotDevStateService');
 const { createMqttClient } = require('../utils/mqttClient');
 const { setupPeriodicSync } = require('./syncService');
+const { monitorEventChanges } = require('./eventChangeService');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
@@ -54,6 +55,9 @@ function setupMqttClient() {
   });
 
   setupPeriodicSync(client);
+
+  monitorEventChanges(client);
+
 
 
   return client;
