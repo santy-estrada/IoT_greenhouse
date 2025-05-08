@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Log {
+  id                  Int      @id @default(autoincrement())
+  entry_creation_time DateTime  
+  entry_store_time     DateTime @default(now())
+
+  temperature         Float
+  luminosity_state    Float
+  humidity_state      Float
+  luminosity_event    Float
+  humidity_event      Float
+
+  plant_id            Int
+  plant               Plant    @relation(fields: [plant_id], references: [id])
+
+  valve_state         Boolean
+  pump_state          Boolean
+  led_intensity_state Int
+
+  valve_event         Boolean
+  pump_event          Boolean
+  led_intensity_event Int
+}
+
+model PlantState {
+  id                  Int      @id @default(autoincrement())
+  last_updated        DateTime @default(now())
+
+  luminosity_state    Float
+  humidity_state      Float
+
+  valve_state         Boolean
+  led_intensity_state Int
+
+  plant               Plant[]
+}
+
+model PlantEvent {
+  id                  Int      @id @default(autoincrement())
+  last_updated        DateTime  @default(now())
+
+  luminosity_event    Float
+  humidity_event      Float
+
+  valve_event         Boolean
+  led_intensity_event Int
+
+  plant               Plant[]
+}
+
+model Plant {
+  id             Int         @id @default(autoincrement())
+  error          Boolean
+
+  plant_state_id Int
+  plant_event_id Int
+  iot_dev_id     Int
+
+  plant_state    PlantState  @relation(fields: [plant_state_id], references: [id])
+  plant_event    PlantEvent  @relation(fields: [plant_event_id], references: [id])
+  iot_dev        IotDev      @relation(fields: [iot_dev_id], references: [id])
+
+  logs           Log[]
+}
+
+model IotDev {
+  id            Int        @id @default(autoincrement())
+  online_status Boolean
+  dev_state_id  Int
+  dev_event_id  Int
+
+  dev_state     IotDevState @relation(fields: [dev_state_id], references: [id])
+  dev_event     IotDevEvent @relation(fields: [dev_event_id], references: [id])
+
+  plants        Plant[]
+}
+
+model IotDevState {
+  id           Int      @id @default(autoincrement())
+  last_updated DateTime @default(now())
+  pump_state   Boolean
+
+  iot_devs     IotDev[]
+}
+
+model IotDevEvent {
+  id           Int      @id @default(autoincrement())
+  last_updated DateTime @default(now())
+  pump_event   Boolean
+
+  iot_devs     IotDev[]
+}
