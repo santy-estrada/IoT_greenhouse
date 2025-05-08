@@ -1,3 +1,4 @@
+const { getIotDevIdFromPlantId } = require('../utils/iotDevId_from_plantId');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
@@ -16,69 +17,42 @@ async function insertDataLog(data, topic) {
   const entry_creation_time = new Date(entryCreation_time);
   const tempDate = new Date();
 
-  // Retrieve valve_event from PlantEvent
-  const valve_event = await prisma.plant.findUnique({
+  // Retrieve event variables from PlantEvent
+  const plant_event_variables = await prisma.plant.findUnique({
     where: { id: plant_id },
     select: {
       plant_event: {
-        select: { valve_event: true },
-      },
-    },
-  });
-  const valveEventValue = valve_event.plant_event.valve_event;
-  console.log('valveEventValue:', valveEventValue);
-
- // Retrieve led_intesity_event from PlantEvent
-  const led_intensity_event = await prisma.plant.findUnique({
-    where: { id: plant_id },
-    select: {
-      plant_event: {
-        select: { led_intensity_event: true },
-      },
-    },
-  });
-
-  const ledEventValue = led_intensity_event.plant_event.led_intensity_event;
-  console.log('ledEventValue:', ledEventValue);
-
-  // Retrieve luminosity_event from PlantEvent
-  const luminosity_event = await prisma.plant.findUnique({
-    where: { id: plant_id },
-    select: {
-      plant_event: {
-        select: { luminosity_event: true },
-      },
-    },
-  });
-  const luminosityEventValue = luminosity_event.plant_event.luminosity_event;
-  console.log('luminosityEventValue:', luminosityEventValue);
-
-  //Retrieve humidity_event from PlantEvent
-  const humidity_event = await prisma.plant.findUnique({
-    where: { id: plant_id },
-    select: {
-      plant_event: {
-        select: { humidity_event: true },
-      },
-    },
-  });
-  const humidityEventValue = humidity_event.plant_event.humidity_event;
-  console.log('humidityEventValue:', humidityEventValue);
-
-  // Retrieve pump_event from IotDevEvent
-  const pump_event = await prisma.plant.findUnique({
-    where: { id: plant_id },
-    select: {
-      iot_dev: {
-        select: {
-          dev_event: {
-            select: { pump_event: true },
-          },
+        select: { 
+          valve_event: true,
+          led_intensity_event: true,
+          luminosity_event: true,
+          humidity_event: true
         },
       },
     },
   });
-  const pumpEventValue = pump_event.iot_dev.dev_event.pump_event;
+
+  const valveEventValue = plant_event_variables.plant_event.valve_event;
+  const ledEventValue = plant_event_variables.plant_event.led_intensity_event;
+  const luminosityEventValue = plant_event_variables.plant_event.luminosity_event;
+  const humidityEventValue = plant_event_variables.plant_event.humidity_event;
+
+  console.log('valveEventValue:', valveEventValue);
+  console.log('ledEventValue:', ledEventValue);
+  console.log('luminosityEventValue:', luminosityEventValue);
+  console.log('humidityEventValue:', humidityEventValue);
+
+  const iot_dev_id = await getIotDevIdFromPlantId(plant_id); // Get iot_dev_id from plant_id
+  // Retrieve pump_event from IotDevEvent using iot_dev_id
+  const pump_event = await prisma.iotDev.findUnique({
+    where: { id: iot_dev_id },
+    select: {
+      dev_event: {
+        select: { pump_event: true },
+      },
+    },
+  });
+  const pumpEventValue = pump_event.dev_event.pump_event;
   console.log('pumpEventValue:', pumpEventValue);
 
 

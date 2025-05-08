@@ -104,6 +104,7 @@ You can test your system by publishing a message to the appropriate MQTT topic. 
 ---
 
 ### 🧾 Payload Format For Log (This is sent by the STM32)
+** Topic **: `MQTT_TEST_TOPIC`
 
 ```json
 {
@@ -125,12 +126,12 @@ You can test your system by publishing a message to the appropriate MQTT topic. 
 ---
 
 ### 🧾 Payload Format to Update Error/Online_status (This is sent by the STM32)
+**Topic**: `MQTT_REAL_TOPIC`
 
 #### Option 1: Update IoT_dev_online_status
 ```json
 {
-  "iot_dev_id": 1,
-  "online_status": true
+  "iot_dev_id": 1 //This will set to true the online status of the dev with the passed id
 }
 ```
 
@@ -259,6 +260,14 @@ This confirms that the message was successfully parsed and stored in the databas
 ## 🧬 System Diagram
 
 ![GreenhouseDiagram](https://www.plantuml.com/plantuml/png/bLLDRziu4BthLmpQg-CYFXfmqBGssYpIHRjozsGW695ZYuX4QicH7E-lNv2IhAyupjuCSzwyz-PBdnsZvJBFu9ibqgaf7QqL7YpcaNjMka2BESJqJqbQq0zo3Wzqdwc3paap2D9CDcB56VKoG7noJ1qEsfHHObxWmxtW4jbOzm4-Fgf3ob-oaY80W08jAw4Ar0pdgASYGystrm8M4Ma9YNbfM6BIxXf74tE9OV3Soz-FUJ3R9qdLyCyVlxRRfyIQPxADceqyK2ib56f2zgUHz4VyvCXMPCEhHCO4VJb_FSfa0lXcSOyQMyHP7Ges5duxpwqD4vYAxCZgREHj2T_BN4d5fnamvGLPvDBIRATHIyYyQd0r8le4NTPnasQJhYmXDXbfeoHKc5NaPb2O8rbutAnTa_-8J1QACY-YQBLwq8eLPkfVP6NqQkKh6ymFAWGtTtLTO0b_-Jbp3C9eJSAZGdpzV7DpDq8kuLuyQtFCI1ve31fMzN-nZA0NQKZBA6hcnXFqfkLrcdw09sgn5nc6YAd_LpX6nPt8kiIqMgsH4ROMjSkLStNB3jQKHJDZC0cewpOOI1ZO2eYzDNapT72xqqV5AR3AoJ7cnJJ5uagAnIH5w4EjD4J7R2mUwYlHQy-uUEFC3fhCmb8OsP7AYsFh-IXiEIZTRNkJpVbNENRyhf4EALtZ9hZiDdQ0MyBNYURQcgHA2PhlT3oI0IWbIKXEKAVujFuo7rJnR-NAy_O6qVuKmMlxqOvXqBit5ge9zgrrPAkeQjpMefiINjlBsD_A06FJlaBly8v9R-vg3qjOArTaUAh1nZVDfOb1A-iohrPVJPxxaxPv8L4sz-kgVz60g0L5KzkJ5Tx4MxZ_-G02iypxgC7K9eikZjtlGc8N1uwHIzUVmFvNmsEMiAd8da2GPLGQC3UbPZ3xC1N0gP_Pcgwf8eYKnBCBJ-UvzWrkI5rFy3nwxvqUw2s3YwjdwsUPPCgbvwgC3cDtBqQ1NY2sdxB-_hplYvTJPpN74oIr_URMjRyMSzZf3OeKwlqn-uuJKdIWs84vwk09s1HAU5qxRKcGgZgE-U1xCfRefyNqHgFl3MxVG2xUH2wYw3DfMURPVm00 "GreenhouseDiagram")
+
+## 🗄️ Database
+
+The database for this project is hosted on Supabase, providing a reliable and scalable solution for managing greenhouse data. You can view the database schema and architecture through the following link:
+
+[View Database Schema on dbdiagram.io](https://dbdiagram.io/d/Greenhouse-68122d751ca52373f5fe1cde)
+
+This schema outlines the relationships and structure of the tables used in the application, ensuring efficient data storage and retrieval.
 
 ## 📖 License
 

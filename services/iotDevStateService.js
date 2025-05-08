@@ -1,3 +1,4 @@
+const { iotDevOnlineService } = require('./iotDevOnlineService');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
@@ -18,6 +19,8 @@ async function updateIotDevState(iot_dev_id, data) {
     console.error('❌ Error updating IotDevState:', err.message);
     throw err;
   }
+
+  await iotDevOnlineService(iot_dev_id); // Update online status
 }
 
 module.exports = { updateIotDevState };
