@@ -12,6 +12,7 @@ async function insertDataLog(data, topic) {
     valve_state,
     pump_state,
     led_intensity_state,
+    mode_state
   } = data;
 
   const entry_creation_time = new Date(entryCreation_time);
@@ -26,7 +27,8 @@ async function insertDataLog(data, topic) {
           valve_event: true,
           led_intensity_event: true,
           luminosity_event: true,
-          humidity_event: true
+          humidity_event: true,
+          mode: true,
         },
       },
     },
@@ -36,7 +38,9 @@ async function insertDataLog(data, topic) {
   const ledEventValue = plant_event_variables.plant_event.led_intensity_event;
   const luminosityEventValue = plant_event_variables.plant_event.luminosity_event;
   const humidityEventValue = plant_event_variables.plant_event.humidity_event;
+  const modeEventValue = plant_event_variables.plant_event.mode;
 
+  console.log('modeValue:', modeEventValue);
   console.log('valveEventValue:', valveEventValue);
   console.log('ledEventValue:', ledEventValue);
   console.log('luminosityEventValue:', luminosityEventValue);
@@ -72,6 +76,8 @@ async function insertDataLog(data, topic) {
         valve_event: valveEventValue,
         pump_event: pumpEventValue,
         led_intensity_event: ledEventValue,
+        mode_event: modeEventValue,
+        mode_state,
       },
     });
     console.log(`✅ 1 record inserted into Log table successfully via ${topic} at ${tempDate}.`);

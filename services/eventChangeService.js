@@ -35,6 +35,9 @@ async function monitorEventChanges(client) {
         if (event.led_intensity_event !== lastEvent.led_intensity_event) {
           changes.led_intensity_event = event.led_intensity_event;
         }
+        if (event.mode !== lastEvent.mode) {
+          changes.mode = event.mode;
+        }
 
         // Publish only if there are changes
         if (Object.keys(changes).length > 0) {

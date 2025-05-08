@@ -28,6 +28,9 @@ model Log {
   valve_event         Boolean
   pump_event          Boolean
   led_intensity_event Int
+
+  mode_event               Int  @default(0)
+  mode_state               Int  @default(0) // Add this field
 }
 
 model PlantState {
@@ -39,21 +42,20 @@ model PlantState {
 
   valve_state         Boolean
   led_intensity_state Int
+  mode                Int      @default(0) // Add this field
 
   plant               Plant[]
 }
 
 model PlantEvent {
   id                  Int      @id @default(autoincrement())
-  last_updated        DateTime  @default(now())
-
+  last_updated        DateTime @default(now())
   luminosity_event    Float
   humidity_event      Float
-
   valve_event         Boolean
   led_intensity_event Int
-
-  plant               Plant[]
+  mode                Int      @default(0) // Add this field
+  plant               Plant[]  // Relation to Plant model
 }
 
 model Plant {

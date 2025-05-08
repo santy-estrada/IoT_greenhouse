@@ -115,7 +115,8 @@ You can test your system by publishing a message to the appropriate MQTT topic. 
   "entryCreation_time": "2025-05-04T15:30:00Z",
   "valve_state": true,
   "pump_state": true,
-  "led_intensity_state": 80
+  "led_intensity_state": 80,
+  "mode_state": 1
 }
 ```
 
@@ -172,36 +173,56 @@ The server periodically synchronizes the states and events of plants and IoT dev
 {
   "plantStates": [
     {
-      "id": 1,
-      "last_updated": "2025-05-04T14:30:00Z",
+      "id": 2,
+      "last_updated": "2025-05-05T03:30:38.327Z",
       "luminosity_state": 75.5,
       "humidity_state": 60.2,
       "valve_state": true,
-      "led_intensity_state": 80
+      "led_intensity_state": 80,
+      "mode": 0
+    },
+    {
+      "id": 1,
+      "last_updated": "2025-05-08T19:22:04.959Z",
+      "luminosity_state": 75.5,
+      "humidity_state": 60.2,
+      "valve_state": true,
+      "led_intensity_state": 80,
+      "mode": 1
     }
   ],
   "plantEvents": [
     {
+      "id": 2,
+      "last_updated": "2025-05-06T17:01:39.918Z",
+      "luminosity_event": 78,
+      "humidity_event": 8.56,
+      "valve_event": false,
+      "led_intensity_event": 36,
+      "mode": 0
+    },
+    {
       "id": 1,
-      "last_updated": "2025-05-04T14:30:00Z",
-      "luminosity_event": 10.5,
-      "humidity_event": 5.2,
+      "last_updated": "2025-05-08T12:55:54.791Z",
+      "luminosity_event": 20,
+      "humidity_event": 45.6,
       "valve_event": true,
-      "led_intensity_event": 50
+      "led_intensity_event": 20,
+      "mode": 2
     }
   ],
   "iotDevStates": [
     {
       "id": 1,
-      "last_updated": "2025-05-04T14:30:00Z",
-      "pump_state": true
+      "last_updated": "2025-05-08T19:22:06.334Z",
+      "pump_state": false
     }
   ],
   "iotDevEvents": [
     {
       "id": 1,
-      "last_updated": "2025-05-04T14:30:00Z",
-      "pump_event": false
+      "last_updated": "2025-05-07T17:11:47.162Z",
+      "pump_event": true
     }
   ]
 }
