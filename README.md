@@ -129,8 +129,8 @@ You can test your system by publishing a message to the appropriate MQTT topic. 
 **Topic**: `MQTT_REAL_TOPIC`
 
 #### Option 1: Update IoT_dev_online_status
-
 This will set to true the online_status of the dev with the passed id
+
 ```json
 {
   "iot_dev_id": 1
