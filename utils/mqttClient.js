@@ -21,6 +21,8 @@ function createMqttClient() {
     client.subscribe(topics, () => {
         topics.forEach((topic) => console.log(`Subscribed to topic: ${topic}`));
         console.log('Synchronization set to: ', process.env.SYNC_INTERVAL/1000, 's' || '30s');
+        console.log('Event check interval set to: ', process.env.EVENT_CHECK_INTERVAL/1000, 's' || '10s');
+        console.log('IoT device online check interval set to: ', process.env.IOT_DEV_TIMEOUT/1000, 's' || '30s');
         const message = 'nodejs mqtt test';
         client.publish(`${topics[0]}`, message, { qos: 0, retain: false }, (error) => {
             if (error) console.error(error);
