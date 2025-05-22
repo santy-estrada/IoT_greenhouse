@@ -15,7 +15,7 @@ function setupMqttClient() {
   const client = createMqttClient();
 
   client.on('message', async (topic, payload) => {
-    console.log('Received Message:', topic, payload.toString());
+    //console.log('Received Message:', topic, payload.toString());
 
     if (topic === process.env.MQTT_MESSAGE_TOPIC) {
       console.log('Message topic:', topic);

@@ -17,7 +17,7 @@ function createMqttClient() {
 
   client.on('connect', () => {
     console.log('MQTT connected');
-    const topics = [`${process.env.MQTT_MESSAGE_TOPIC}`, `${process.env.MQTT_TEST_TOPIC}`, `${process.env.MQTT_REAL_TOPIC}`, `${process.env.MQTT_REAL_TOPIC}`];	
+    const topics = [`${process.env.MQTT_MESSAGE_TOPIC}`, `${process.env.MQTT_TEST_TOPIC}`, `${process.env.MQTT_REAL_TOPIC}`];	
     client.subscribe(topics, () => {
         topics.forEach((topic) => console.log(`Subscribed to topic: ${topic}`));
         console.log('Synchronization set to: ', process.env.SYNC_INTERVAL/1000, 's' || '30s');

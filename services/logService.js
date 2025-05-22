@@ -40,11 +40,11 @@ async function insertDataLog(data, topic) {
   const humidityEventValue = plant_event_variables.plant_event.humidity_event;
   const modeEventValue = plant_event_variables.plant_event.mode;
 
-  console.log('modeValue:', modeEventValue);
-  console.log('valveEventValue:', valveEventValue);
-  console.log('ledEventValue:', ledEventValue);
-  console.log('luminosityEventValue:', luminosityEventValue);
-  console.log('humidityEventValue:', humidityEventValue);
+  // console.log('modeValue:', modeEventValue);
+  // console.log('valveEventValue:', valveEventValue);
+  // console.log('ledEventValue:', ledEventValue);
+  // console.log('luminosityEventValue:', luminosityEventValue);
+  // console.log('humidityEventValue:', humidityEventValue);
 
   const iot_dev_id = await getIotDevIdFromPlantId(plant_id); // Get iot_dev_id from plant_id
   // Retrieve pump_event from IotDevEvent using iot_dev_id
@@ -57,7 +57,7 @@ async function insertDataLog(data, topic) {
     },
   });
   const pumpEventValue = pump_event.dev_event.pump_event;
-  console.log('pumpEventValue:', pumpEventValue);
+  // console.log('pumpEventValue:', pumpEventValue);
 
 
   try {
